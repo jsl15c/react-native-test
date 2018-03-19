@@ -1,0 +1,19 @@
+import React, { Component } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Image
+} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
+export default class HomeScreen extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{color:"#fff"}}>Home Screen</Text>
+      </View>
+    );
+  }
+}
