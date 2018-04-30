@@ -16,6 +16,7 @@ const s = require('../styles/stylesheet');
 
 export default class MainScreen extends Component {
   render() {
+    const { navigate } = this.props.navigation;
     const logo = require('../assets/images/logo.png');
     const dimensions = Dimensions.get('window');
     const imageHeight = Math.round(dimensions.width * 9 / 16);

@@ -8,41 +8,48 @@ import {
   Image,
   Dimensions,
   Input,
-  Button
+  Button,
+  StatusBar
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 
 const s = require('../styles/stylesheet');
 
-export default class LoginScreen extends Component {
+export default class SignupScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state={
+    this.state = {
+      fullName:'',
       email:'',
       password:'',
-      error:''
+      error:'',
     };
   }
 
   render() {
-    const { navigate } = this.props.navigation;
     const logo = require('../assets/images/logo.png');
     const dimensions = Dimensions.get('window');
     const imageHeight = Math.round(dimensions.width * 9 / 16);
     const imageWidth = dimensions.width;
     return (
       <View style={s.default_bg}>
-        <View style={{justifyContent:'flex-start', alignItems:'center'}}>
+      <StatusBar hidden={true}/>
+        <View style={{alignItems:'center'}}>
           <Image
             source={logo}
             style={{
               resizeMode: 'contain',
-              width: imageWidth/2,
+              width: imageWidth/2
             }}
           />
           </View>
-          <View style={{alignItems:'flex-start', justifyContent:'flex-start',padding:20}}>
+          <View style={{padding:20}}>
+          <Text style={s.inputLabel}>Full Name</Text>
+          <TextInput
+            style={s.inputField}
+            placeholderTextColor='#fff'
+            onChangeText={(text) => this.setState({fullName:text})}
+            />
             <Text style={s.inputLabel}>Email address</Text>
             <TextInput
               style={s.inputField}
@@ -58,25 +65,39 @@ export default class LoginScreen extends Component {
               <View style={s.loginButton}>
                 <Button
                   color='#fff'
-                  title="Log In"
-                  onPress={()=>this.login()}
+                  title="Sign Up"
+                  onPress={() => this.signup()}
                 />
+                </View>
+                <View style={{
+                  flexDirection:'row',
+                  marginTop:5
+                }}>
+                  <Text style={s.inputLabel}>Already signed up?</Text>
+                  <View style={{paddingTop:4}}>
+                    <Button
+                      color='lightblue'
+                      title="Login"
+                      onPress={()=>this.goToLogin()}
+                    />
+                  </View>
+                  <Text style={s.errorMsg}>{this.state.error}</Text>
               </View>
-              <Text style={s.errorMsg}>{this.state.error}</Text>
           </View>
       </View>
     );
   }
 
-  login() {
+  signup() {
     const {navigate} = this.props.navigation;
-    return fetch('http://localhost:3000/user-api/login', {
+    return fetch('http://localhost:3000/user-api/signup', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        fullName:this.state.fullName,
         email: this.state.email,
         password: this.state.password
       })
@@ -84,7 +105,7 @@ export default class LoginScreen extends Component {
     .then((res) => res.json())
     .then((resultFromApi) => {
       if (resultFromApi.error) {
-        this.setState({error:resultFromApi.error.message})
+        this.setState({error:resultFromApi.error})
         return;
       }
       navigate('Home', {user:resultFromApi});
@@ -96,4 +117,10 @@ export default class LoginScreen extends Component {
     });
   }
 
+  goToLogin() {
+    const {navigate} = this.props.navigation;
+    navigate('Login');
+  }
+
+// end class
 }
